@@ -4,37 +4,47 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "./UserContext";
+import { useContext } from "react";
 
 export default function Login() {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [clickedToLogin, setClickedToLogin] = useState(false);
+  const navigate = useNavigate()
+  
+    const [userInfo, setUserInfo] = useContext(UserContext);
 
   function tryLogin(e) {
     console.log("cliquei");
     setClickedToLogin(!clickedToLogin);
     e.preventDefault();
-    const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
+    const URL =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
     const body = {
-        email: {userEmail},
-        password: {userPassword}
-    }
+      email:  userEmail ,
+      password:  userPassword ,
+    };
 
-    const promise = axios.post(URL,body)
+    const promise = axios.post(URL, body);
     promise.then((res) => {
-        console.log(res.data)
+      console.log(res.data);
+      setUserInfo(res.data);
+      navigate("/hoje")
+      console.log(userInfo, "essa é a user info")
     });
     promise.catch((err) => {
-        console.log(err.response.data)
-        alert("Dados de usuário ou senha estão incorretos, tente novamente!")
-        setClickedToLogin(!clickedToLogin)
-    })
-
-
-
-}
+      console.log(err.response.data);
+      setClickedToLogin(false);
+      setUserEmail("");
+      setUserPassword("")
+      alert("Dados de usuário ou senha estão incorretos, tente novamente!");
+    });
+  }
 
   return (
+    
     <ScreenContainer>
       <img src={logo} alt="logo" />
       <LoginContainer>
@@ -55,7 +65,11 @@ export default function Login() {
             placeholder="senha"
             required
           />
-          <ButtonContainer clickedToLogin={clickedToLogin} type="submit" disabled={clickedToLogin}>
+          <ButtonContainer
+            clickedToLogin={clickedToLogin}
+            type="submit"
+            disabled={clickedToLogin}
+          >
             {clickedToLogin === false ? (
               "Entrar"
             ) : (
@@ -115,7 +129,6 @@ const LoginContainer = styled.div`
       color: #dbdbdb;
     }
   }
-
 `;
 
 const ButtonContainer = styled.button`
@@ -131,14 +144,14 @@ const ButtonContainer = styled.button`
   letter-spacing: 0em;
   text-align: center;
   background-color: #52b6ff;
-  opacity: ${(props) => (props.clickedToLogin === false)?"1" :"0.7"};
+  opacity: ${(props) => (props.clickedToLogin === false ? "1" : "0.7")};
   align-items: center;
   color: #ffffff;
   display: flex;
   justify-content: center;
   margin-bottom: 25px;
-  border-color:#52b6ff;
-  box-shadow:none;
+  border-color: #52b6ff;
+  box-shadow: none;
 `;
 
 const StyledLink = styled(Link)`

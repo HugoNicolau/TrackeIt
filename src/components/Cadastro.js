@@ -1,56 +1,113 @@
-import logo from "./img/logo"
 import styled from "styled-components";
+import logo from "./img/logo.png"
+import { useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Cadastro(){
 
+const [registerEmail, setRegisterEmail] = useState("")
+const [registerName, setRegisterName] = useState("")
+const [registerImage, setRegisterImage] = useState("")
+const [registerPassword, setRegisterPassword] = useState("")
+const [clickedToSingIn, setClickedToSingIn] = useState(false)
+const navigate = useNavigate();
 
-    function trySingIn(){
 
+
+    function trySingIn(e){
+
+        e.preventDefault();
+        setClickedToSingIn(!clickedToSingIn);
+        const body = {
+            email: registerEmail,
+            name: registerName,
+            image: registerImage,
+            password: registerPassword
+        };
+
+        const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up"
+
+        const promise = axios.post(URL, body)
+
+        promise.then((res)=> {
+            console.log(res.data)
+            navigate("/");
+        })
+        promise.catch((err) => {
+            console.log(err.response.data)
+            setClickedToSingIn(false);
+            
+
+            alert("Dados de email ou nome já existentes, tente novamente!");
+        })
     }
+
+
     return (
-    //     <ScreenContainer>
-    //       <img src={logo} alt="logo" />
-    //       <LoginContainer>
-    //         <form onSubmit={trySingIn}>
-    //           <input
-    //             type="email"
-    //             id="emailField"
-    //             value={userEmail}
-    //             onChange={(e) => setUserEmail(e.target.value)}
-    //             placeholder="email"
-    //             required
-    //           />
-    //           <input
-    //             type="password"
-    //             id="passwordField"
-    //             value={userPassword}
-    //             onChange={(e) => setUserPassword(e.target.value)}
-    //             placeholder="senha"
-    //             required
-    //           />
-    //           <ButtonContainer clickedToLogin={clickedToLogin} type="submit" disabled={clickedToLogin}>
-    //             {clickedToLogin === false ? (
-    //               "Entrar"
-    //             ) : (
-    //               <ThreeDots
-    //                 height="80"
-    //                 width="80"
-    //                 radius="9"
-    //                 color="#ffffff"
-    //                 ariaLabel="three-dots-loading"
-    //                 wrapperStyle={{}}
-    //                 wrapperClassName=""
-    //                 visible={true}
-    //               />
-    //             )}
-    //           </ButtonContainer>
-    //         </form>
-    //         <StyledLink to="/cadastro">
-    //           <h1>Não tem uma conta? Cadastre-se!</h1>
-    //         </StyledLink>
-    //       </LoginContainer>
-    //     </ScreenContainer>
-    //   );
+        <ScreenContainer>
+            <Link to={"/"}>
+          <img src={logo} alt="logo" />
+            </Link>
+          <LoginContainer>
+            <form onSubmit={trySingIn}>
+              <input
+                type="email"
+                id="emailField"
+                value={registerEmail}
+                onChange={(e) => setRegisterEmail(e.target.value)}
+                placeholder="email"
+                required
+              />
+              <input
+                type="password"
+                id="passwordField"
+                value={registerPassword}
+                onChange={(e) => setRegisterPassword(e.target.value)}
+                placeholder="senha"
+                required
+              />
+              <input
+                type="text"
+                id="nameField"
+                value={registerName}
+                onChange={(e) => setRegisterName(e.target.value)}
+                placeholder="nome"
+                required
+              />
+              <input
+                type="url"
+                id="imageField"
+                value={registerImage}
+                onChange={(e) => setRegisterImage(e.target.value)}
+                placeholder="foto"
+                required
+              />
+              <ButtonContainer clickedToSingIn={clickedToSingIn} type="submit" disabled={clickedToSingIn}>
+                {clickedToSingIn === false ? (
+                  "Cadastrar"
+                ) : (
+                  <ThreeDots
+                    height="80"
+                    width="80"
+                    radius="9"
+                    color="#ffffff"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClassName=""
+                    visible={true}
+                  />
+                )}
+              </ButtonContainer>
+            </form>
+            <StyledLink to="/">
+              <h1>Já tem uma conta? Faça login!</h1>
+            </StyledLink>
+          </LoginContainer>
+        </ScreenContainer>
+      );
     }
     
     const ScreenContainer = styled.div`
