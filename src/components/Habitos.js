@@ -8,6 +8,7 @@ import axios from "axios";
 export default function Habitos() {
   const [userInfo] = useContext(UserContext);
   const [habitsList, setHabitsList] = useState([]);
+  const [openForm, setOpenForm] = useState(false);
 
   const [isSelected, setIsSelected] = useState(false);
   const DAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
@@ -33,15 +34,18 @@ export default function Habitos() {
     });
   }, []);
 
+  function toOpenForm(){
+    setOpenForm(!openForm)
+  }
   return (
     <HabitosContainer>
       <Header userInfo={userInfo} />
       <HabitosInnerContainer>
         <HabitsHeadPart>
           <h1>Meus hábitos</h1>
-          <button>+</button>
+          <button onClick={() => toOpenForm()}>+</button>
         </HabitsHeadPart>
-        <CreatingContainer>
+        {openForm && <CreatingContainer>
           <input type="text" placeholder="nome do hábito" />
           <DaysContainer>
             {DAYS.map((d, i) => (
@@ -52,7 +56,7 @@ export default function Habitos() {
             <CancelButton>Cancelar</CancelButton>
             <SaveButton type="submit">Salvar</SaveButton>
           </ButtonsContainer>
-        </CreatingContainer>
+        </CreatingContainer>}
         <TextContainer>
           Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
           começar a trackear!
@@ -137,6 +141,7 @@ const CreatingContainer = styled.form`
   /* position:absolute; */
   padding-right: 16px;
   padding-bottom: 15px;
+  margin-top:22px;
 
   input {
     height: 45px;
