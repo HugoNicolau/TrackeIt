@@ -113,7 +113,7 @@ export default function Hoje() {
         {date}
       </DayOfWeekContainer>
       <PercentageContainer data-identifier="today-infos" zeroFinished={(finishedHabits/totalHabits===0)===true}>
-        {finishedHabits/totalHabits===0 ? "Nenhum hábito concluído ainda" : `${(finishedHabits/totalHabits)*100}% dos hábitos concluídos`}
+        {finishedHabits/totalHabits===0 ? "Nenhum hábito concluído ainda" : `${(finishedHabits/totalHabits).toFixed(2)*100}% dos hábitos concluídos`}
       </PercentageContainer>
 
       {todayHabits.map((t) => (
