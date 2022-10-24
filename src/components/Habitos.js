@@ -61,9 +61,14 @@ export default function Habitos() {
     const promise = axios.post(urlCreateHabit,body,config);
     promise.then((res) => {
       console.log(res.data)
+     const newHabitAdded = [...habitsList,res.data]
+      setHabitsList(newHabitAdded)
       //Adicionar o habito ao array de habitos
 
       //Limpar os negocios e fechar o form
+      setOpenForm(false)
+      setHabitName("")
+      setIsSelected([])
     })
     promise.catch((err) => {
       console.log(err.response.data)
@@ -113,8 +118,8 @@ export default function Habitos() {
             começar a trackear!
           </TextContainer>
         )}
-        {habitsList.map((h) => 
-          <OneHabitContainer>
+        {habitsList.map((h,idx) => 
+          <OneHabitContainer key={idx}>
           <h1>{h.name}</h1>
            <DaysContainer>
             {DAYS.map((d, i) => (
@@ -141,6 +146,7 @@ const HabitosContainer = styled.div`
   background-color: #f2f2f2;
   width: 100vw;
   height: 100%;
+  min-height:100vh;
 `;
 
 const HabitosInnerContainer = styled.div`
@@ -230,6 +236,7 @@ const CreatingContainer = styled.form`
   padding-right: 16px;
   padding-bottom: 15px;
   margin-top: 22px;
+  margin-bottom:20px;
 
   input {
     height: 45px;
