@@ -1,11 +1,15 @@
+import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 
 export default function Header(props){
+const navigate = useNavigate();
+function returnToLogin(){
 
-
+    navigate("/")
+}
     return(
         <HeaderContainer>
-        <h1>TrackIt</h1>
+        <h1 onClick={()=> returnToLogin()}>TrackIt</h1>
         <ImageContainer src={props.userInfo.image}/>
         </HeaderContainer>
     )

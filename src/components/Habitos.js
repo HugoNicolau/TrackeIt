@@ -9,13 +9,20 @@ export default function Habitos() {
   const [userInfo] = useContext(UserContext);
   const [habitsList, setHabitsList] = useState([]);
   const [openForm, setOpenForm] = useState(false);
+  const [habitName, setHabitName] = useState("");
 
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSelected, setIsSelected] = useState([]);
+
   const DAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
 
-
-  function selectButton(){
-    setIsSelected(!isSelected)
+  function selectButton(index) {
+    if (isSelected.includes(index)) {
+      const newArray = isSelected.filter((i) => i !== index);
+      setIsSelected(newArray);
+    } else {
+      const newArray = [...isSelected, index];
+      setIsSelected(newArray);
+    }
   }
   useEffect(() => {
     const URL =
@@ -28,14 +35,39 @@ export default function Habitos() {
     const promise = axios.get(URL, config);
     promise.then((res) => {
       setHabitsList(res.data);
+      console.log(habitsList, "essa é a habitList")
     });
     promise.catch((err) => {
       console.log(err.response.data);
     });
-  }, []);
+  }, [userInfo.token]);
 
-  function toOpenForm(){
-    setOpenForm(!openForm)
+  function toOpenForm() {
+    setOpenForm(!openForm);
+  }
+  function saveHabit(e) {
+    e.preventDefault();
+    //Mandar o habito pra API
+    const urlCreateHabit = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits"
+    const body = {
+      name: habitName,
+      days: isSelected 
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const promise = axios.post(urlCreateHabit,body,config);
+    promise.then((res) => {
+      console.log(res.data)
+      //Adicionar o habito ao array de habitos
+
+      //Limpar os negocios e fechar o form
+    })
+    promise.catch((err) => {
+      console.log(err.response.data)
+    })
   }
   return (
     <HabitosContainer>
@@ -45,22 +77,60 @@ export default function Habitos() {
           <h1>Meus hábitos</h1>
           <button onClick={() => toOpenForm()}>+</button>
         </HabitsHeadPart>
-        {openForm && <CreatingContainer>
-          <input type="text" placeholder="nome do hábito" />
-          <DaysContainer>
+        {openForm && (
+          <CreatingContainer onSubmit={saveHabit}>
+            <input
+              type="text"
+              placeholder="nome do hábito"
+              id="habitName"
+              value={habitName}
+              onChange={(e) => setHabitName(e.target.value)}
+              required
+            />
+            <DaysContainer>
+              {DAYS.map((d, i) => (
+                <ButtonDay
+                  key={i}
+                  id={i}
+                  onClick={() => selectButton(i)}
+                  isSelected={isSelected}
+                  index={i}
+                  type="button"
+                >
+                  {d}
+                </ButtonDay>
+              ))}
+            </DaysContainer>
+            <ButtonsContainer>
+              <CancelButton onClick={() => toOpenForm()}>Cancelar</CancelButton>
+              <SaveButton type="submit">Salvar</SaveButton>
+            </ButtonsContainer>
+          </CreatingContainer>
+        )}
+        {habitsList.length < 1 && (
+          <TextContainer>
+            Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
+            começar a trackear!
+          </TextContainer>
+        )}
+        {habitsList.map((h) => 
+          <OneHabitContainer>
+          <h1>{h.name}</h1>
+           <DaysContainer>
             {DAYS.map((d, i) => (
-              <ButtonDay key={i} onClick={()=> selectButton()} isSelected={isSelected}>{d}</ButtonDay>
+              <ButtonDay
+                key={i}
+                id={i}
+                isSelected={h.days}
+                index={i}
+                >
+                {d}
+                </ButtonDay>
             ))}
-          </DaysContainer>
-          <ButtonsContainer>
-            <CancelButton onClick={() => toOpenForm()}>Cancelar</CancelButton>
-            <SaveButton type="submit">Salvar</SaveButton>
-          </ButtonsContainer>
-        </CreatingContainer>}
-        {habitsList.length<1 && <TextContainer>
-          Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
-          começar a trackear!
-        </TextContainer>}
+            
+          </DaysContainer> 
+          </OneHabitContainer>
+        )}
       </HabitosInnerContainer>
       <Footer />
     </HabitosContainer>
@@ -70,7 +140,7 @@ export default function Habitos() {
 const HabitosContainer = styled.div`
   background-color: #f2f2f2;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 `;
 
 const HabitosInnerContainer = styled.div`
@@ -93,6 +163,7 @@ const HabitsHeadPart = styled.div`
   display: flex;
   justify-content: space-between;
   text-align: center;
+  margin-bottom: 20px;
   button {
     height: 35px;
     width: 40px;
@@ -116,7 +187,24 @@ const HabitsHeadPart = styled.div`
   }
 `;
 
-const OneHabitContainer = styled.div``;
+const OneHabitContainer = styled.div`
+height: 91px;
+width: 340px;
+border-radius: 5px;
+background-color:#ffffff;
+margin-bottom: 10px;
+font-family: Lexend Deca;
+font-size: 20px;
+font-weight: 400;
+line-height: 25px;
+letter-spacing: 0em;
+text-align: left;
+padding-left:15px;
+padding-top:13px;
+padding-right:10px;
+color:#666666;
+
+`;
 
 const TextContainer = styled.h3`
   font-family: Lexend Deca;
@@ -141,7 +229,7 @@ const CreatingContainer = styled.form`
   /* position:absolute; */
   padding-right: 16px;
   padding-bottom: 15px;
-  margin-top:22px;
+  margin-top: 22px;
 
   input {
     height: 45px;
@@ -175,8 +263,9 @@ const ButtonDay = styled.button`
   justify-content: center;
   width: 30px;
   border-radius: 5px;
-  background-color:#ffffff;
-  background-color: ${props => props.isSelected ? "#dbdbdb" : "#ffffff"};
+  background-color: #ffffff;
+  background-color: ${(props) =>
+    props.isSelected.includes(props.index) ? "#dbdbdb" : "#ffffff"};
   border: 1px solid #d4d4d4;
   font-family: Lexend Deca;
   font-size: 20px;
@@ -184,7 +273,8 @@ const ButtonDay = styled.button`
   line-height: 25px;
   letter-spacing: 0em;
   text-align: left;
-  color: ${props => props.isSelected ? "#ffffff" : "#dbdbdb"};
+  color: ${(props) =>
+    props.isSelected.includes(props.index) ? "#ffffff" : "#dbdbdb"};
   margin-top: 8px;
   margin-right: 4px;
 `;

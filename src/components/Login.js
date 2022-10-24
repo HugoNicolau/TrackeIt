@@ -17,7 +17,6 @@ export default function Login() {
     const [userInfo, setUserInfo] = useContext(UserContext);
 
   function tryLogin(e) {
-    console.log("cliquei");
     setClickedToLogin(!clickedToLogin);
     e.preventDefault();
     const URL =
@@ -29,16 +28,15 @@ export default function Login() {
 
     const promise = axios.post(URL, body);
     promise.then((res) => {
-      console.log(res.data);
       setUserInfo(res.data);
       navigate("/hoje")
-      console.log(userInfo, "essa é a user info")
     });
     promise.catch((err) => {
       console.log(err.response.data);
       setClickedToLogin(false);
       setUserEmail("");
       setUserPassword("")
+      console.log(userInfo, "userInfo")
       alert("Dados de usuário ou senha estão incorretos, tente novamente!");
     });
   }
