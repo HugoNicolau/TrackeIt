@@ -17,6 +17,7 @@ export default function Habitos() {
   const [isSelected, setIsSelected] = useState([]);
   
 
+  
   const DAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
 
   function selectButton(index) {

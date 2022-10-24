@@ -1,142 +1,186 @@
-import styled from "styled-components"
-import { useContext, useEffect, useState } from "react"
-import { UserContext } from "./UserContext"
-import Header from "./Header"
-import Footer from "./Footer"
-import {BsCheckSquareFill} from "react-icons/bs"
-import axios from "axios"
-import dayjs from "dayjs"
+import styled from "styled-components";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "./UserContext";
+import Header from "./Header";
+import Footer from "./Footer";
+import { BsCheckSquareFill } from "react-icons/bs";
+import axios from "axios";
+import dayjs from "dayjs";
 
-export default function Hoje(){
-    const [userInfo] = useContext(UserContext);
-    const [todayHabits, setTodayHabits] = useState([])
-    useEffect(() => {
-        const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today"
-        const config = {
-            headers: {
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-          };
-          const promise = axios.get(URL, config)
-          promise.then((res) => {
-            console.log(res.data)
-            setTodayHabits(res.data)
-          })
-          promise.catch((err) => {
-            console.log(err.response.data)
-          })
-    },[])
+export default function Hoje() {
 
-   
-    const now = dayjs().locale("pt-br").format("dddd");
-    const date =  dayjs().locale("pt-br").format("DD/MM");
-    console.log(now, "now")
-    return(
-        <HojeContainer>
-        <Header userInfo={userInfo}/>
-        {console.log(userInfo, "essa é a user info no hoje")}
-        <DayOfWeekContainer>
-        {now === "Monday" ? "Segunda-Feira" : now === "Tuesday" ? "Terça-Feira" : now === "Wednesday" ? "Quarta-Feira" : now === "Thursday" ? "Quinta-Feira" : now === "Friday" ? "Sexta-Feira" : now === "Saturday" ? "Sábado" : "Domingo"}
-         {", "}
+
+  const [userInfo] = useContext(UserContext);
+  const [todayHabits, setTodayHabits] = useState([]);
+  const [doneHabits, setDoneHabits] = useState([])
+
+  useEffect(() => {
+    const URL =
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const promise = axios.get(URL, config);
+    promise.then((res) => {
+      console.log(res.data);
+      setTodayHabits(res.data);
+      setDoneHabits(res.data.done)
+    });
+    promise.catch((err) => {
+      console.log(err.response.data);
+    });
+  }, []);
+
+  function checkHabit(id, done){
+   if(done === false){
+    const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`
+    const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const promise = axios.post(URL,null, config);
+
+      promise.then((res) => {
+        console.log(res.data)
+       
+      })
+      promise.catch((err) => {
+        console.log(err.response.data)
+      })
+   }
+   else{
+    const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`
+    const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const promise = axios.post(URL,{}, config);
+
+      promise.then((res) => {
+        console.log(res.data)
+        done = false;
+      })
+      promise.catch((err) => {
+        console.log(err.response.data)
+      })
+   }
+
+  }
+  const now = dayjs().locale("pt-br").format("dddd");
+  const date = dayjs().locale("pt-br").format("DD/MM");
+  console.log(now, "now");
+  return (
+    <HojeContainer>
+      <Header userInfo={userInfo} />
+      {console.log(userInfo, "essa é a user info no hoje")}
+      <DayOfWeekContainer>
+        {now === "Monday"
+          ? "Segunda-Feira"
+          : now === "Tuesday"
+          ? "Terça-Feira"
+          : now === "Wednesday"
+          ? "Quarta-Feira"
+          : now === "Thursday"
+          ? "Quinta-Feira"
+          : now === "Friday"
+          ? "Sexta-Feira"
+          : now === "Saturday"
+          ? "Sábado"
+          : "Domingo"}
+        {", "}
         {date}
-        </DayOfWeekContainer>
-        <PercentageContainer>
+      </DayOfWeekContainer>
+      <PercentageContainer>
         Quantidade de habitos concluidos
-        </PercentageContainer>
+      </PercentageContainer>
 
-        {todayHabits.map((t) => (
-
+      {todayHabits.map((t) => (
         <HabitBox key={t.id}>
-            <h1>
-                {t.name}
-            </h1>
-            <h2>
-                Sequencia atual : {t.currentSequence}
-            </h2>
-            <h2>
-                Seu recorde: {t.highestSequence}
-            </h2>
-            <CheckBoxContainer done={t.done}>
-            <BsCheckSquareFill/>
-            </CheckBoxContainer>
+          <h1>{t.name}</h1>
+          <h2>Sequencia atual : {t.currentSequence}</h2>
+          <h2>Seu recorde: {t.highestSequence}</h2>
+          <CheckBoxContainer done={t.done} onClick={() => checkHabit(t.id, t.done)}>
+            <BsCheckSquareFill />
+          </CheckBoxContainer>
         </HabitBox>
-        ))}
-        <Footer/>
-        </HojeContainer>
-        
-    )
+      ))}
+      <Footer />
+    </HojeContainer>
+  );
 }
 
 const HojeContainer = styled.div`
-background-color:#F2F2F2;
-width:100vw;
-min-height:100vh;
-height:100%;
-font-family: Lexend Deca;
-padding-top:100px;
-padding-left:18px;
-padding-right:17px;
-
-`
+  background-color: #f2f2f2;
+  width: 100vw;
+  min-height: 100vh;
+  height: 100%;
+  font-family: Lexend Deca;
+  padding-top: 100px;
+  padding-left: 18px;
+  padding-right: 17px;
+`;
 const DayOfWeekContainer = styled.h1`
-font-family: Lexend Deca;
-font-size: 23px;
-font-weight: 400;
-line-height: 29px;
-letter-spacing: 0em;
-text-align: left;
-color: #126BA5;
-`
+  font-family: Lexend Deca;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 29px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #126ba5;
+`;
 const PercentageContainer = styled.h2`
-font-family: Lexend Deca;
-font-size: 18px;
-font-weight: 400;
-line-height: 22px;
-letter-spacing: 0em;
-text-align: left;
-color: #BABABA;
-margin-bottom:28px;
-`
+  font-family: Lexend Deca;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #bababa;
+  margin-bottom: 28px;
+`;
 const HabitBox = styled.div`
-height: 94px;
-width: 100%;
-border-radius: 5px;
-background-color:#ffffff;
-padding-left:15px;
-padding-top:13px;
-padding-bottom:12px;
-position:relative;
-margin-bottom:10px;
-h1{
+  height: 94px;
+  width: 100%;
+  border-radius: 5px;
+  background-color: #ffffff;
+  padding-left: 15px;
+  padding-top: 13px;
+  padding-bottom: 12px;
+  position: relative;
+  margin-bottom: 10px;
+  h1 {
     font-family: Lexend Deca;
-font-size: 20px;
-font-weight: 400;
-line-height: 25px;
-letter-spacing: 0em;
-text-align: left;
-color: #666666;
-margin-bottom:7px;
-
-}
-h2{
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 25px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #666666;
+    margin-bottom: 7px;
+  }
+  h2 {
     font-family: Lexend Deca;
-font-size: 13px;
-font-weight: 400;
-line-height: 16px;
-letter-spacing: 0em;
-text-align: left;
-color: #666666;
-}
-`
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #666666;
+  }
+`;
 
 const CheckBoxContainer = styled.div`
-    position:absolute;
-    right:13px;
-    top:13px;
-    height:50px;
-    font-size:69px;
-    color: ${props => props.done ? "#8fc549" : "#ebebeb"};
-    border-color:#e7e7e7;
-    background-color:#ffffff;
-    border-radius:15px;
-`
+  position: absolute;
+  right: 13px;
+  top: 13px;
+  height: 50px;
+  font-size: 69px;
+  color: ${(props) => (props.done ? "#8fc549" : "#ebebeb")};
+  border-color: #e7e7e7;
+  background-color: #ffffff;
+  border-radius: 15px;
+`;
