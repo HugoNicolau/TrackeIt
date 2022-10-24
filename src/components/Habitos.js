@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
+import {BsTrash} from "react-icons/bs"
 
 
 export default function Habitos() {
@@ -76,10 +77,38 @@ export default function Habitos() {
       setIsDisabled(false)
     })
     promise.catch((err) => {
-      console.log(err.response.data)
+      alert(err.response.data)
       setIsDisabled(false)
     })
   }
+
+  function deleteHabit(id){
+    if(window.confirm("Tem certeza de que deseja excluir este hábito?") === true){
+
+      const DELETEurl = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const promise = axios.delete(DELETEurl, config)
+  
+      promise.then((res) => {
+        const newHabitList = habitsList.filter((h) => h.id!==id)
+        setHabitsList(newHabitList)
+      })
+      promise.catch((err) => {
+        console.log(err.response.data)
+      })
+    }
+    else{
+      return;
+    }
+    
+
+  }
+
   return (
     <HabitosContainer>
       <Header userInfo={userInfo} />
@@ -158,6 +187,9 @@ export default function Habitos() {
             ))}
             
           </DaysContainer> 
+              <DeleteHabitContainer onClick={() => deleteHabit(h.id)}>
+              <BsTrash/>
+              </DeleteHabitContainer>
           </OneHabitContainer>
         )}
       </HabitosInnerContainer>
@@ -233,6 +265,8 @@ padding-left:15px;
 padding-top:13px;
 padding-right:10px;
 color:#666666;
+position:relative;
+
 
 `;
 
@@ -359,3 +393,8 @@ const ButtonsContainer = styled.div`
   align-items: flex-end;
   justify-content: right;
 `;
+const DeleteHabitContainer = styled.div`
+position:absolute;
+right:10px;
+top:10px;
+`
