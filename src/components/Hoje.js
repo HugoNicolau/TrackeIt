@@ -34,9 +34,9 @@ export default function Hoje() {
       setTodayHabits(res.data);
       setTotalHabits(res.data.length)
       setFinishedHabits(contador)
-      console.log(contador, "contador")
-      
-      
+      const arrayDone = newArray.filter((n) => n.done===true)
+      console.log(arrayDone, "arrayDonepls")
+      setDoneHabits(arrayDone)
 
     });
     promise.catch((err) => {
@@ -44,7 +44,7 @@ export default function Hoje() {
     });
   }, []);
 
-  function checkHabit(id, done){
+  function checkHabit(id, done, t){
    if(done === false){
     const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`
     const config = {
@@ -56,6 +56,8 @@ export default function Hoje() {
 
       promise.then((res) => {
         console.log(res.data)
+        const checkAddDone = [...doneHabits, t]
+        setDoneHabits(checkAddDone)
        
       })
       promise.catch((err) => {
@@ -73,7 +75,9 @@ export default function Hoje() {
 
       promise.then((res) => {
         console.log(res.data)
-        done = false;
+
+        const NewDoneArray = doneHabits.filter((d) => d.id!== id)
+        setDoneHabits(NewDoneArray)
       })
       promise.catch((err) => {
         console.log(err.response.data)
@@ -114,7 +118,7 @@ export default function Hoje() {
           <h1>{t.name}</h1>
           <h2>Sequencia atual : {t.currentSequence}</h2>
           <h2>Seu recorde: {t.highestSequence}</h2>
-          <CheckBoxContainer done={t.done} onClick={() => checkHabit(t.id, t.done)}>
+          <CheckBoxContainer done={doneHabits.includes(t)} onClick={() => checkHabit(t.id, t.done, t)}>
             <BsCheckSquareFill />
           </CheckBoxContainer>
         </HabitBox>
