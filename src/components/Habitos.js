@@ -53,14 +53,14 @@ export default function Habitos() {
             ))}
           </DaysContainer>
           <ButtonsContainer>
-            <CancelButton>Cancelar</CancelButton>
+            <CancelButton onClick={() => toOpenForm()}>Cancelar</CancelButton>
             <SaveButton type="submit">Salvar</SaveButton>
           </ButtonsContainer>
         </CreatingContainer>}
-        <TextContainer>
+        {habitsList.length<1 && <TextContainer>
           Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
           começar a trackear!
-        </TextContainer>
+        </TextContainer>}
       </HabitosInnerContainer>
       <Footer />
     </HabitosContainer>
