@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import { BsCheckSquareFill } from "react-icons/bs";
 import axios from "axios";
 import dayjs from "dayjs";
+import { HabitsContext } from "./HabitsContext";
 
 export default function Hoje() {
 
@@ -13,6 +14,8 @@ export default function Hoje() {
   const [userInfo] = useContext(UserContext);
   const [todayHabits, setTodayHabits] = useState([]);
   const [doneHabits, setDoneHabits] = useState([])
+
+  const [totalHabits, setTotalHabits, finishedHabits, setFinishedHabits] = useContext(HabitsContext)
 
   useEffect(() => {
     const URL =
@@ -24,9 +27,17 @@ export default function Hoje() {
     };
     const promise = axios.get(URL, config);
     promise.then((res) => {
-      console.log(res.data);
+      console.log(res.data, "resdataDone");
+      const newArray = res.data;
+      let contador=0;
+      newArray.map((n)=>(n.done===true)&& contador++)
       setTodayHabits(res.data);
-      setDoneHabits(res.data.done)
+      setTotalHabits(res.data.length)
+      setFinishedHabits(contador)
+      console.log(contador, "contador")
+      
+      
+
     });
     promise.catch((err) => {
       console.log(err.response.data);
@@ -76,7 +87,7 @@ export default function Hoje() {
   return (
     <HojeContainer>
       <Header userInfo={userInfo} />
-      {console.log(userInfo, "essa é a user info no hoje")}
+      
       <DayOfWeekContainer>
         {now === "Monday"
           ? "Segunda-Feira"
@@ -94,8 +105,8 @@ export default function Hoje() {
         {", "}
         {date}
       </DayOfWeekContainer>
-      <PercentageContainer>
-        Quantidade de habitos concluidos
+      <PercentageContainer zeroFinished={(finishedHabits/totalHabits===0)===true}>
+        {finishedHabits/totalHabits===0 ? "Nenhum hábito concluído ainda" : `${(finishedHabits/totalHabits)*100}% dos hábitos concluídos`}
       </PercentageContainer>
 
       {todayHabits.map((t) => (
@@ -140,6 +151,7 @@ const PercentageContainer = styled.h2`
   letter-spacing: 0em;
   text-align: left;
   color: #bababa;
+  color: ${props => (props.zeroFinished===true) ? "#bababa" : "#8FC549"};
   margin-bottom: 28px;
 `;
 const HabitBox = styled.div`

@@ -7,7 +7,7 @@ import { useContext } from "react";
 
 export default function Footer(){
 
-    const [totalHabits, finishedHabits] = useContext(HabitsContext)
+    const [totalHabits, setTotalHabits, finishedHabits, setFinishedHabits] = useContext(HabitsContext)
     let percentage = 0;
     
     if(totalHabits === 0){
@@ -15,7 +15,9 @@ export default function Footer(){
     }
     else{
         
-         percentage = finishedHabits/totalHabits;
+         percentage = (finishedHabits/totalHabits)*100;
+         console.log(finishedHabits, "finished")
+         console.log(totalHabits, "total")
     }
 
     return(

@@ -12,9 +12,9 @@ export default function Historico(){
         
         <HistoricoContainer>
             <Header userInfo={userInfo} />
-            <h1>
+            <h3>
                 Histórico
-            </h1>
+            </h3>
             <h2>
         Em breve você poderá ver o histórico dos seus hábitos aqui!
             </h2>
@@ -32,7 +32,7 @@ background-color: #f2f2f2;
   padding-top: 100px;
   padding-left: 18px;
   padding-right: 17px;
-  h1{
+  h3{
     font-family: Lexend Deca;
 font-size: 23px;
 font-weight: 400;
