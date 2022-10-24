@@ -5,6 +5,7 @@ import Header from "./Header"
 import Footer from "./Footer"
 import {BsCheckSquareFill} from "react-icons/bs"
 import axios from "axios"
+import dayjs from "dayjs"
 
 export default function Hoje(){
     const [userInfo] = useContext(UserContext);
@@ -26,12 +27,18 @@ export default function Hoje(){
           })
     },[])
 
+   
+    const now = dayjs().locale("pt-br").format("dddd");
+    const date =  dayjs().locale("pt-br").format("DD/MM");
+    console.log(now, "now")
     return(
         <HojeContainer>
         <Header userInfo={userInfo}/>
         {console.log(userInfo, "essa é a user info no hoje")}
         <DayOfWeekContainer>
-        Dia da semana
+        {now === "Monday" ? "Segunda-Feira" : now === "Tuesday" ? "Terça-Feira" : now === "Wednesday" ? "Quarta-Feira" : now === "Thursday" ? "Quinta-Feira" : now === "Friday" ? "Sexta-Feira" : now === "Saturday" ? "Sábado" : "Domingo"}
+         {", "}
+        {date}
         </DayOfWeekContainer>
         <PercentageContainer>
         Quantidade de habitos concluidos
