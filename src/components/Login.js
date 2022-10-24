@@ -72,7 +72,7 @@ export default function Login() {
               "Entrar"
             ) : (
               <ThreeDots
-                height="80"
+                height="51"
                 width="80"
                 radius="9"
                 color="#ffffff"

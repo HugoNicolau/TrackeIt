@@ -4,14 +4,17 @@ import Footer from "./Footer";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
+import { ThreeDots } from "react-loader-spinner";
+
 
 export default function Habitos() {
   const [userInfo] = useContext(UserContext);
   const [habitsList, setHabitsList] = useState([]);
   const [openForm, setOpenForm] = useState(false);
   const [habitName, setHabitName] = useState("");
-
+  const [isDisabled, setIsDisabled] = useState(false)
   const [isSelected, setIsSelected] = useState([]);
+  
 
   const DAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
 
@@ -48,6 +51,7 @@ export default function Habitos() {
   function saveHabit(e) {
     e.preventDefault();
     //Mandar o habito pra API
+    setIsDisabled(true)
     const urlCreateHabit = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits"
     const body = {
       name: habitName,
@@ -69,9 +73,11 @@ export default function Habitos() {
       setOpenForm(false)
       setHabitName("")
       setIsSelected([])
+      setIsDisabled(false)
     })
     promise.catch((err) => {
       console.log(err.response.data)
+      setIsDisabled(false)
     })
   }
   return (
@@ -90,6 +96,7 @@ export default function Habitos() {
               id="habitName"
               value={habitName}
               onChange={(e) => setHabitName(e.target.value)}
+              disabled={isDisabled}
               required
             />
             <DaysContainer>
@@ -101,6 +108,7 @@ export default function Habitos() {
                   isSelected={isSelected}
                   index={i}
                   type="button"
+                  disabled={isDisabled}
                 >
                   {d}
                 </ButtonDay>
@@ -108,7 +116,23 @@ export default function Habitos() {
             </DaysContainer>
             <ButtonsContainer>
               <CancelButton onClick={() => toOpenForm()}>Cancelar</CancelButton>
-              <SaveButton type="submit">Salvar</SaveButton>
+              <SaveButton type="submit" disabled={isDisabled}>{
+              isDisabled ? (
+                <ThreeDots
+                  height="10"
+                  width="84"
+                  radius="9"
+                  color="#ffffff"
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClassName=""
+                  visible={true}
+                />
+              )
+              :
+
+              "Salvar"
+              }</SaveButton>
             </ButtonsContainer>
           </CreatingContainer>
         )}
@@ -324,6 +348,7 @@ const SaveButton = styled.button`
   height: 35px;
   width: 84px;
   border-radius: 4.636363506317139px;
+  opacity: ${(props) => (props.disabled === false ? "1" : "0.7")};
 `;
 
 const ButtonsContainer = styled.div`
