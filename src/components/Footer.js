@@ -23,7 +23,7 @@ export default function Footer(){
     return(
         <FooterContainer>
             <StyledLink to={"/habitos"}>
-        <h1>Habitos</h1>
+        <h1 data-identifier="habit-page-action">Habitos</h1>
             </StyledLink>
         <ElipseContainer>
             <StyledLink to={"/hoje"}>
@@ -40,7 +40,7 @@ export default function Footer(){
         </StyledLink>
         </ElipseContainer>
         <StyledLink to={"/historico"}>
-        <h1>Histórico</h1>
+        <h1 data-identifier="historic-page-action">Histórico</h1>
         </StyledLink>
 
         </FooterContainer>

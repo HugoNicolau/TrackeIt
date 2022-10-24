@@ -54,6 +54,7 @@ export default function Login() {
             onChange={(e) => setUserEmail(e.target.value)}
             placeholder="email"
             required
+            data-identifier="input-email"
           />
           <input
             type="password"
@@ -62,11 +63,13 @@ export default function Login() {
             onChange={(e) => setUserPassword(e.target.value)}
             placeholder="senha"
             required
+            data-identifier="input-password"
           />
           <ButtonContainer
             clickedToLogin={clickedToLogin}
             type="submit"
             disabled={clickedToLogin}
+            data-identifier="login-btn"
           >
             {clickedToLogin === false ? (
               "Entrar"
@@ -85,7 +88,7 @@ export default function Login() {
           </ButtonContainer>
         </form>
         <StyledLink to="/cadastro">
-          <h1>Não tem uma conta? Cadastre-se!</h1>
+          <h1 data-identifier="sign-up-action">Não tem uma conta? Cadastre-se!</h1>
         </StyledLink>
       </LoginContainer>
     </ScreenContainer>

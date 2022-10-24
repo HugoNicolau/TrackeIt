@@ -45,7 +45,7 @@ export default function Hoje() {
   }, []);
 
   function checkHabit(id, done, t){
-   if(done === false){
+   if(!doneHabits.includes(t)){
     const URL = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`
     const config = {
         headers: {
@@ -58,6 +58,8 @@ export default function Hoje() {
         console.log(res.data)
         const checkAddDone = [...doneHabits, t]
         setDoneHabits(checkAddDone)
+        setFinishedHabits(checkAddDone.length)
+        
        
       })
       promise.catch((err) => {
@@ -78,6 +80,7 @@ export default function Hoje() {
 
         const NewDoneArray = doneHabits.filter((d) => d.id!== id)
         setDoneHabits(NewDoneArray)
+        setFinishedHabits(NewDoneArray.length)
       })
       promise.catch((err) => {
         console.log(err.response.data)
@@ -92,7 +95,7 @@ export default function Hoje() {
     <HojeContainer>
       <Header userInfo={userInfo} />
       
-      <DayOfWeekContainer>
+      <DayOfWeekContainer data-identifier="today-infos">
         {now === "Monday"
           ? "Segunda-Feira"
           : now === "Tuesday"
@@ -109,16 +112,16 @@ export default function Hoje() {
         {", "}
         {date}
       </DayOfWeekContainer>
-      <PercentageContainer zeroFinished={(finishedHabits/totalHabits===0)===true}>
+      <PercentageContainer data-identifier="today-infos" zeroFinished={(finishedHabits/totalHabits===0)===true}>
         {finishedHabits/totalHabits===0 ? "Nenhum hábito concluído ainda" : `${(finishedHabits/totalHabits)*100}% dos hábitos concluídos`}
       </PercentageContainer>
 
       {todayHabits.map((t) => (
-        <HabitBox key={t.id}>
+        <HabitBox data-identifier="today-infos" key={t.id} done={doneHabits.includes(t)} compare={t.currentSequence===t.highestSequence}>
           <h1>{t.name}</h1>
           <h2>Sequencia atual : {t.currentSequence}</h2>
-          <h2>Seu recorde: {t.highestSequence}</h2>
-          <CheckBoxContainer done={doneHabits.includes(t)} onClick={() => checkHabit(t.id, t.done, t)}>
+          <h3>Seu recorde: {t.highestSequence}</h3>
+          <CheckBoxContainer data-identifier="done-habit-btn" done={doneHabits.includes(t)} onClick={() => checkHabit(t.id, t.done, t)}>
             <BsCheckSquareFill />
           </CheckBoxContainer>
         </HabitBox>
@@ -176,6 +179,7 @@ const HabitBox = styled.div`
     letter-spacing: 0em;
     text-align: left;
     color: #666666;
+    
     margin-bottom: 7px;
   }
   h2 {
@@ -186,6 +190,17 @@ const HabitBox = styled.div`
     letter-spacing: 0em;
     text-align: left;
     color: #666666;
+    color: ${props => (props.done) ? "#8fc549" : "#666666"};
+  }
+  h3{
+    font-family: Lexend Deca;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #666666;
+    color: ${props => (props.compare && props.done) ? "#8fc549" : "#666666"};
   }
 `;
 

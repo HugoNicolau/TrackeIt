@@ -60,6 +60,7 @@ const navigate = useNavigate();
                 onChange={(e) => setRegisterEmail(e.target.value)}
                 placeholder="email"
                 required
+                data-identifier="input-email"
               />
               <input
                 type="password"
@@ -68,6 +69,7 @@ const navigate = useNavigate();
                 onChange={(e) => setRegisterPassword(e.target.value)}
                 placeholder="senha"
                 required
+                data-identifier="input-password"
               />
               <input
                 type="text"
@@ -76,6 +78,7 @@ const navigate = useNavigate();
                 onChange={(e) => setRegisterName(e.target.value)}
                 placeholder="nome"
                 required
+                data-identifier="input-name"
               />
               <input
                 type="url"
@@ -84,6 +87,7 @@ const navigate = useNavigate();
                 onChange={(e) => setRegisterImage(e.target.value)}
                 placeholder="foto"
                 required
+                data-identifier="input-photo"
               />
               <ButtonContainer clickedToSingIn={clickedToSingIn} type="submit" disabled={clickedToSingIn}>
                 {clickedToSingIn === false ? (
@@ -103,7 +107,7 @@ const navigate = useNavigate();
               </ButtonContainer>
             </form>
             <StyledLink to="/">
-              <h1>Já tem uma conta? Faça login!</h1>
+              <h1 data-identifier="back-to-login-action">Já tem uma conta? Faça login!</h1>
             </StyledLink>
           </LoginContainer>
         </ScreenContainer>

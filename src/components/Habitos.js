@@ -116,7 +116,7 @@ export default function Habitos() {
       <HabitosInnerContainer>
         <HabitsHeadPart>
           <h1>Meus hábitos</h1>
-          <button onClick={() => toOpenForm()}>+</button>
+          <button data-identifier="create-habit-btn" onClick={() => toOpenForm()}>+</button>
         </HabitsHeadPart>
         {openForm && (
           <CreatingContainer onSubmit={saveHabit}>
@@ -128,10 +128,12 @@ export default function Habitos() {
               onChange={(e) => setHabitName(e.target.value)}
               disabled={isDisabled}
               required
+              data-identifier="input-habit-name" 
             />
             <DaysContainer>
               {DAYS.map((d, i) => (
                 <ButtonDay
+                data-identifier="week-day-btn"
                   key={i}
                   id={i}
                   onClick={() => selectButton(i)}
@@ -145,8 +147,8 @@ export default function Habitos() {
               ))}
             </DaysContainer>
             <ButtonsContainer>
-              <CancelButton onClick={() => toOpenForm()}>Cancelar</CancelButton>
-              <SaveButton type="submit" disabled={isDisabled}>{
+              <CancelButton data-identifier="cancel-habit-create-btn" onClick={() => toOpenForm()}>Cancelar</CancelButton>
+              <SaveButton data-identifier="save-habit-create-btn" type="submit" disabled={isDisabled}>{
               isDisabled ? (
                 <ThreeDots
                   height="10"
@@ -167,14 +169,14 @@ export default function Habitos() {
           </CreatingContainer>
         )}
         {habitsList.length < 1 && (
-          <TextContainer>
+          <TextContainer data-identifier="no-habit-message">
             Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
             começar a trackear!
           </TextContainer>
         )}
         {habitsList.map((h,idx) => 
           <OneHabitContainer key={idx}>
-          <h1>{h.name}</h1>
+          <h1 data-identifier="habit-name">{h.name}</h1>
            <DaysContainer>
             {DAYS.map((d, i) => (
               <ButtonDay
@@ -188,7 +190,7 @@ export default function Habitos() {
             ))}
             
           </DaysContainer> 
-              <DeleteHabitContainer onClick={() => deleteHabit(h.id)}>
+              <DeleteHabitContainer data-identifier="delete-habit-btn" onClick={() => deleteHabit(h.id)}>
               <BsTrash/>
               </DeleteHabitContainer>
           </OneHabitContainer>

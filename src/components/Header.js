@@ -10,7 +10,7 @@ function returnToLogin(){
     return(
         <HeaderContainer>
         <h1 onClick={()=> returnToLogin()}>TrackIt</h1>
-        <ImageContainer src={props.userInfo.image}/>
+        <ImageContainer data-identifier="avatar" src={props.userInfo.image}/>
         </HeaderContainer>
     )
 }
