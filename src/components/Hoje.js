@@ -119,8 +119,8 @@ export default function Hoje() {
       {todayHabits.map((t) => (
         <HabitBox data-identifier="today-infos" key={t.id} done={doneHabits.includes(t)} compare={t.currentSequence===t.highestSequence}>
           <h1>{t.name}</h1>
-          <h2>Sequencia atual : {t.currentSequence}</h2>
-          <h3>Seu recorde: {t.highestSequence}</h3>
+          <h2>Sequencia atual : {doneHabits.includes(t) ? (Number(t.currentSequence)+1) : (t.currentSequence)}</h2>
+          <h3>Seu recorde: {(doneHabits.includes(t) && (t.currentSequence+1>=t.highestSequence))? t.currentSequence+1 : t.highestSequence}</h3>
           <CheckBoxContainer data-identifier="done-habit-btn" done={doneHabits.includes(t)} onClick={() => checkHabit(t.id, t.done, t)}>
             <BsCheckSquareFill />
           </CheckBoxContainer>
