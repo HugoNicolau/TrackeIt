@@ -40,7 +40,7 @@ export default function Habitos() {
     const promise = axios.get(URL, config);
     promise.then((res) => {
       setHabitsList(res.data);
-      console.log(habitsList, "essa é a habitList")
+     
     });
     promise.catch((err) => {
       console.log(err.response.data);
@@ -66,7 +66,6 @@ export default function Habitos() {
     };
     const promise = axios.post(urlCreateHabit,body,config);
     promise.then((res) => {
-      console.log(res.data)
      const newHabitAdded = [...habitsList,res.data]
       setHabitsList(newHabitAdded)
       //Adicionar o habito ao array de habitos

@@ -16,8 +16,7 @@ export default function Footer(){
     else{
         
          percentage = (finishedHabits/totalHabits)*100;
-         console.log(finishedHabits, "finished")
-         console.log(totalHabits, "total")
+         
     }
 
     return(

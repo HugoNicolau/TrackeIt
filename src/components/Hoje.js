@@ -27,7 +27,6 @@ export default function Hoje() {
     };
     const promise = axios.get(URL, config);
     promise.then((res) => {
-      console.log(res.data, "resdataDone");
       const newArray = res.data;
       let contador=0;
       newArray.map((n)=>(n.done===true)&& contador++)
@@ -35,7 +34,6 @@ export default function Hoje() {
       setTotalHabits(res.data.length)
       setFinishedHabits(contador)
       const arrayDone = newArray.filter((n) => n.done===true)
-      console.log(arrayDone, "arrayDonepls")
       setDoneHabits(arrayDone)
 
     });
@@ -55,7 +53,6 @@ export default function Hoje() {
       const promise = axios.post(URL,null, config);
 
       promise.then((res) => {
-        console.log(res.data)
         const checkAddDone = [...doneHabits, t]
         setDoneHabits(checkAddDone)
         setFinishedHabits(checkAddDone.length)
@@ -76,7 +73,6 @@ export default function Hoje() {
       const promise = axios.post(URL,{}, config);
 
       promise.then((res) => {
-        console.log(res.data)
 
         const NewDoneArray = doneHabits.filter((d) => d.id!== id)
         setDoneHabits(NewDoneArray)
@@ -90,7 +86,6 @@ export default function Hoje() {
   }
   const now = dayjs().locale("pt-br").format("dddd");
   const date = dayjs().locale("pt-br").format("DD/MM");
-  console.log(now, "now");
   return (
     <HojeContainer>
       <Header userInfo={userInfo} />

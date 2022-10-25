@@ -36,7 +36,6 @@ export default function Login() {
       setClickedToLogin(false);
       setUserEmail("");
       setUserPassword("")
-      console.log(userInfo, "userInfo")
       alert("Dados de usuário ou senha estão incorretos, tente novamente!");
     });
   }
