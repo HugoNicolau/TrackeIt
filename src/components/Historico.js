@@ -16,7 +16,7 @@ export default function Historico(){
                 Histórico
             </h3>
             <h2>
-        Em breve você poderá ver o histórico dos seus hábitos aqui!
+        Em breve você poderá ver o histórico dos seus hábitos aqui com um calendario bem massa!
             </h2>
         <Footer/>
         </HistoricoContainer>
